@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <script src="js/react.js"></script>
+  <script src="js/react-dom.js"></script>
+  <script src="js/browser.min.js"></script>
+  <title></title>
+</head>
+<body>
+
+<div id="example"></div>
+
+<script type="text/babel">
+  var MyForm = React.createClass({
+    getInitialState:function(){
+        return {
+          user_name:'',
+          user_sex:'1',
+          user_isAgree:true
+        }
+    },
+    handleChangeName:function(event){
+        //在这个方法中处理表单验证、权限。。。
+        //修改状态
+        this.setState({user_name:event.target.value});
+    },
+    handleChangeSex:function(e){
+        this.setState({user_sex:e.target.value});
+    },
+    handleChangeIsAgree:function(e){
+        this.setState({user_isAgree:e.target.checked})
+    },
+    handleSubmit:function(e){
+      e.preventDefault();
+      console.log(this.state);
+    },
+    render:function(){
+      return <form onSubmit={this.handleSubmit} >
+      <label htmlFor="userName">输入用户名</label>
+      <input id="userName"
+             onChange={this.handleChangeName}
+             value={this.state.user_name}
+             type="text"/>
+      <br/>
+      <label htmlFor="userSex">选择性别</label>
+      <select id="userSex"
+        onChange={this.handleChangeSex}
+        value={this.state.user_sex}>
+        <option value="1">男</option>
+        <option value="2">女</option>
+      </select>
+      <br/>
+      <label htmlFor="userIsAgree">是否同意</label>
+      <input type="checkbox"
+             onChange={this.handleChangeIsAgree}
+             checkd={this.state.user_isAgree}/>
+      <br/>
+      <button>注册</button>
+      </form>
+    }
+  })
+
+  ReactDOM.render(
+    <MyForm></MyForm>,
+    document.getElementById('example')
+  )
+
+</script>
+
+</body>
+</html>

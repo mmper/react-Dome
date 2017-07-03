@@ -1,0 +1,232 @@
+一、state 状态
+
+初始化状态:返回一个对象的方式来初始化状态
+ getInitialState:function(){}
+
+修改状态：
+ this.setState({状态1：值,状态2：值..})
+
+读取状态
+ this.state.状态名称
+
+例子：开关
+React中的state是可以实现单向数据绑定的，将状态中的数据绑定到视图上，同时只要是状态中的值改了，React框架在最合适的时候，采用最优的算法来重新渲染视图。
+
+练习：需要大家通过state来重构综合练习
+步骤：将保存的result 通过state来初始化、读、写。
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/react.js"></script>
+    <script src="js/react-dom.js"></script>
+    <script src="js/browser.min.js"></script>
+</head>
+<body>
+<div id="example"></div>
+<script type="text/babel">
+    //完成组件的创建和使用
+    var AComponent=React.createClass({
+        handleChange:function(){
+            //1、拿到当前输入框的值
+            var nowValue=this.refs.myInput.value;
+            console.log(nowValue);
+            //2、将这个值传递给Main组件
+            //①在子组件中如何调用父组件的方法
+            //this.props.funcSave，拿到这个方法
+            //后面加括号，就是调用这个方法
+            this.props.funcSave(nowValue);
+        },
+        render:function(){
+            return <input type="text"
+                    placeholder="请输入"
+                    ref="myInput"
+                    onChange={this.handleChange}
+            />
+        }
+    });
+    var BComponent=React.createClass({
+        handleClick:function(){
+            //读取Mian组件中的result值
+            //var result=this.props.funcGet();
+            var result=this.props.myValue;
+            alert("A组件中输入的值为："+result);
+        },
+        render:function(){
+            return <button onClick={this.handleClick}>ClickMe</button>
+        }
+    });
+    var MainComponent=React.createClass({
+        //初始化状态
+        getInitialState:function(){
+            return {result:""}
+        },
+        //Main组件存值
+        save:function(value){
+            //修改状态
+            this.setState({result:value})
+        },
+        //单独定义一个方法，用于得到用户的输入
+        get:function(){
+            return this.state.result;
+        },
+        render:function(){
+            return <div>
+                <AComponent funcSave={this.save}></AComponent><br/>
+                //<BComponent funcGet={this.get}></BComponent>
+                <BComponent myValue={this.state.result}></BComponent>
+            </div>
+        }
+    });
+    ReactDOM.render(
+        <MainComponent></MainComponent>,
+        document.getElementById("example")
+    )
+
+</script>
+</body>
+</html>
+
+
+深入组件：自己的生命周期
+
+3个阶段：
+mount 挂载到DOM
+update 更新
+unmount 从DOM中移除
+
+生命周期的处理函数：是在对应阶段会被自动调用的
+mount：
+componentWillMount
+componentDidMount
+
+update
+componentWillUpdate(nextProps,nextState)
+componentDidUpdate(prevProps,prevState)
+
+unmount
+componentWillUnmount
+
+Demo：
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 第一步：引入3个js文件-->
+    <script src="js/react.js"></script>
+    <script src="js/react-dom.js"></script>
+    <script src="js/browser.min.js"></script>
+</head>
+<body>
+<!--第二步：创建视图-->
+<div id="example"></div>
+<!--第三步：一定要在type=text/babel(编译器)，因为用jsx语法 -->
+<script type="text/babel">
+    //创建组件
+    var LifeComponent=React.createClass({
+        //初始化状态
+        getInitialState:function(){
+            return {count:0}
+        },
+        //生命周期
+        componentWillMount:function(){
+             console.log("准备挂载");
+             console.log(this.refs.myInput);
+        },
+        componentDidMount:function(){
+            console.log("挂载完成");
+            console.log(this.refs.myInput);
+        },
+        componentWillUpdate:function(nextProps,nextState){
+            console.log("准备更新");
+            console.log(nextProps,nextState);
+        },
+        //给按钮绑定一个处理函数，在处理函数中修改状态
+        handleClick:function(){
+            //读取状态中的count，自增操作
+            var nowCount=this.state.count;
+            nowCount++;
+            //写入操作
+            this.setState({count:nowCount});
+        },
+        render:function(){
+            return <div>
+                <input type="value" ref="myInput"/>
+                <p>{this.state.count}</p>
+                <button onClick={this.handleClick}>ClickMe</button>
+            </div>
+        }
+    })
+    ReactDOM.render(
+    <LifeComponent></LifeComponent>,
+    document.getElementById("example")
+    )
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+注意事项：
+一些标识符像 class 和 for 不建议作为 组件属性名。作为替代，ReactDOM使用className和htmlFor来做对应的属性。
+
+
+
+练习：在组件（div）插入到真实的DOM之后，启动定时器修改组件的透明度（0~1）
+
+①指定生命周期处理函数
+②初始化状态，读、写状态
+③ 
+style="opacity:this.state.状态名称"
+==》
+style={{opacity:this.state.状态名称}}
+
+
+二、表单
+
+受控组件：当表单元素指定以下属性，变成了受控组件（用户的输入操作是无效的，交给react来控制）
+input	value/checked
+select selected
+
+
+
+
+三、三连棋
+1、组件
+square 小方块
+board 棋盘
+game 
+
+（15:50 - 16:05）
+①给square指定点击的处理函数 和 要显示的内容
+②在board组件指定操作状态的处理函数
+③决定输赢
+
+
+四、ToDoList
+1模拟显示
+需要创建4个组件
+
+2实现添加功能
+①在点击添加按钮时，将输入的数据存在状态中的数组
+
+在todobox中定义状态：数组
+在todoInput中点击按钮时，往数组中写入数据（在todobox定义一个修改状态的方法传递给todoinput，去调用）
+
+②显示出来
+将状态中的数组中的数据，显示在todolist中
+
+每日一练：
+
+ToDoItem删除功能
+
+①明确一点：状态中的数组已经绑定到了视图，视图元素的增删都是针对状态中的数组
+②点击删除按钮，删除数组中指定下标的数据即可

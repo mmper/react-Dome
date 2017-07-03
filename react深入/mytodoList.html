@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <script src="js/react.js"></script>
+  <script src="js/react-dom.js"></script>
+  <script src="js/browser.min.js"></script>
+  <title></title>
+</head>
+<body>
+
+<div id="example"></div>
+
+<script type="text/babel">
+  var ToDoInput = React.createClass({
+    handleClick:function(){
+      this.props.funcWrite(this.refs.myInput.value);
+    },
+    render:function(){
+      return <div>
+        <h2>待做事项列表</h2>
+        <input type="text"
+               ref='myInput' placeholder='plz input'/>
+        <button onClick={this.handleClick}>
+        add</button>
+      </div>
+    }
+  })
+  var ToDoList = React.createClass({
+    showList:function(){
+      //根据数组中元素个数返回多个todoitem
+      return this.props.myList.map(
+          function(value,index){
+            return <ToDoItem content={value} key={index}></ToDoItem>
+          }
+        )
+    },
+    render:function(){
+      return <ul>
+      {this.showList()}
+      </ul>
+    }
+  })
+  var ToDoItem = React.createClass({
+    render:function(){
+      return <li>
+        <button>删除</button>
+        <span>{this.props.content}</span>
+      </li>
+    }
+  })
+  var ToDoBox = React.createClass({
+    getInitialState:function(){
+      return {list:[]}
+    },
+    //往状态中写入数据
+    write:function(msg){
+      var myList = this.state.list;
+      myList.push(msg);
+      this.setState({list:myList});
+      console.log(myList);
+    },
+    render:function(){
+      return <div>
+        <ToDoInput funcWrite={this.write}>
+        </ToDoInput>
+        <ToDoList myList={this.state.list}></ToDoList>
+      </div>
+    }
+  })
+
+  ReactDOM.render(
+    <ToDoBox></ToDoBox>,
+    document.getElementById('example')
+  )
+
+</script>
+
+</body>
+</html>
